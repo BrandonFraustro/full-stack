@@ -18,14 +18,14 @@ function App() {
     const names = persons.map(person => person.name)
     const found = names.find(name => name === newName)
     //console.log('Found: ', newName);
-    if (typeof found === 'undefined') {
+    if (found === undefined) {
       const personObject = {
         name: newName,
       }
       setPersons(persons.concat(personObject))
       setNewName('')
     } else {
-      window.alert(found + ' is already added to phonebook')
+      window.alert(`${newName} is already added to phonebook`)
     }
   }
   
