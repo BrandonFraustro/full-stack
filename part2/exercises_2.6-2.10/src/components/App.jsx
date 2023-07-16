@@ -5,25 +5,26 @@ function App() {
   const [ persons, setPersons ] = useState([
     {
       name: 'Arto Hellas',
+      number: '040-1234567',
     },
-    {
-      name: 'Brandon Fraustro'
-    }
   ])
   //console.log(persons.map(person => person.name));
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
 
-  const handleAddName = (event) => {
+  const handleAddPhonebook = (event) => {
     event.preventDefault()
     const names = persons.map(person => person.name)
     const found = names.find(name => name === newName)
-    //console.log('Found: ', newName);
+    console.log('Found: ', newNumber);
     if (found === undefined) {
       const personObject = {
         name: newName,
+        number: newNumber,
       }
       setPersons(persons.concat(personObject))
       setNewName('')
+      setNewNumber('')
     } else {
       window.alert(`${newName} is already added to phonebook`)
     }
@@ -35,23 +36,32 @@ function App() {
     setNewName(event.target.value)
     //console.log(event.target.value);
   }
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+    //console.log(event.target.value);
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
       <form>
-        <div>
-          name: <input onChange={handleNameChange}/>
+        <div className="inputs">
+          <div>
+            name: <input onChange={handleNameChange} />
+          </div>
+          <div>
+            number: <input onChange={handleNumberChange} />
+          </div>
         </div>
         <div className='button'>
-          <button type='submit' onClick={handleAddName}>add</button>
+          <button type='submit' onClick={handleAddPhonebook}>add</button>
         </div>
         <h2>Numbers</h2>
         <div>
           <ul>
             {
               persons.map(person =>
-                <li key={person.name}>{person.name}</li>  
+                <li key={person.name}>{person.name} {person.number}</li>  
               )
             }
           </ul>
