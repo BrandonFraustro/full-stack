@@ -17,6 +17,10 @@
   padding: 0 0.5rem;
 }
 
+form {
+  width: 250px;
+}
+
 .inputs > div {
   width: 100%;
   display: flex;
