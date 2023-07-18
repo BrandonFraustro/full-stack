@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get(' https://restcountries.com/v3.1/all')
+      .get('https://restcountries.com/v3.1/all')
       .then(response => {
         setCountries(response.data)
       })
@@ -22,11 +22,42 @@ function App() {
     setFind(filtered);
   }
 
-  const countriesToShow = find.length > 10 
-    ? 'Too many matches, specify another filter'
-    : find.map(data =>
-      <li key={data.name.common}>{data.name.common}</li>
-    )
+  //console.log("Flag: ", Object.values(find[0].languages))
+
+  const countriesToShow = () =>{
+    if (find.length > 10) {
+      return 'Too many matches, specify another filter';
+    } else if (find.length > 1) {
+      return find.map(data => (
+        <ul>
+          <li key={data.name.common}>{data.name.common}</li>
+        </ul>
+      ));
+    } else if(find.length === 1){
+      const country = find[0]
+      //const capital = country.map(data => (data.capital))
+      //const capi = capital.map(data => (data[0]))
+      const languages = Object.values(country.languages);
+      return (
+        <div>
+          <h2>{country.name.common}</h2>
+          <p>Capital: {country.capital[0]}</p>
+          <p>Population: {country.population}</p>
+          <h2>Languages</h2>
+          <ul>
+            {
+              languages.map(language => 
+                <li key={language}>{language}</li>
+              )
+            }
+          </ul>
+          <img src={country.flags.png} alt={country.name.common} />
+        </div>
+      );
+    } else {
+      return null
+    }
+  }
 
   return (
     <div>
@@ -35,11 +66,9 @@ function App() {
         <input type="text" id='find' onChange={handleFindCountries}/>
       </div>
       <div className="results">
-        <ul>
-          {
-            countriesToShow
-          }
-        </ul>
+        {
+          countriesToShow()
+        }
       </div>
     </div>
   )
