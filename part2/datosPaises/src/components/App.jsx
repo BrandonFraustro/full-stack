@@ -4,6 +4,7 @@ import './App.css'
 
 function App() {
   const [countries, setCountries] = useState([])
+  const [weather, setWeather] = useState([])
   const [selectedCountry, setSelectedCountry] = useState(null)
   const [find, setFind] = useState([])
 
@@ -14,6 +15,8 @@ function App() {
         setCountries(response.data)
       })
   }, [])
+
+  const WEATHERSTACK_API_KEY = 'cb6bde81e2c9c9ec4808d37fe35c94b3';
 
   const handleFindCountries = (event) => {
     const search = event.target.value.toLowerCase();
@@ -70,6 +73,21 @@ function App() {
     } else if(find.length === 1){
       const country = find[0]
       const languages = Object.values(country.languages);
+
+      axios
+        .get(`http://api.weatherstack.com/current`, {
+          params: {
+            access_key: WEATHERSTACK_API_KEY,
+            query: country.capital[0]
+          }
+        })
+        .then(response => {
+          setWeather(response.data);
+        })
+        .catch(error => {
+          console.log('Error fetching weather data:', error);
+        });
+
       return (
         <div>
           <h2>{country.name.common}</h2>
@@ -84,6 +102,10 @@ function App() {
             }
           </ul>
           <img src={country.flags.png} alt={country.name.common} />
+          <h2>Weather in {country.capital[0]}</h2>
+          <p> <b>Temperature:</b> {weather.temperature}°C</p>
+          
+          <p><b>Wind:</b> {weather.wind}</p>
         </div>
       );
     } else {
