@@ -1,10 +1,17 @@
 import React from "react";
 
-const Note = (props) => {
-    //sconsole.log('Note: ', props.note.content);
+const Note = ({ note, toggleImportance }) => {
+    //console.log('Note: ', note);
+
+    const label = note.important 
+    ? 'make not important' : 'make important'
+
     return (
         <div>
-            <li>{props.note.content}</li>
+            <li>
+                {note.content}
+                <button onClick={toggleImportance}>{label}</button>
+            </li>
         </div>
     )
 }
