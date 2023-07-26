@@ -15,8 +15,8 @@ const App = () => {
     //console.log('Effect');
     noteServices
       .getAll()
-      .then(initialNotes => {
-        setNotes(initialNotes)
+      .then(response => {
+        setNotes(response)
       })
   }, [])
   
@@ -46,6 +46,12 @@ const App = () => {
       .update(changedNote)
       .then(returnedNote => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
+      .catch(error => {
+        alert (
+          `The note ${note.content} was already deleted form server`
+        )
+        setNotes(notes.filter(n => n.id !== id))
       })
     //console.log(`Importance of ${id} needs to be toggled`);
   }
