@@ -4,6 +4,7 @@ import './App.css'
 import Filter from './Filter'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
+import personService from '../services/persons'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -12,32 +13,33 @@ const App = () => {
   const [ newSearch, setNewSearch ] = useState([])
 
   useEffect(() => {
-    console.log('effect');
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled');
         setPersons(response.data)
         setNewSearch(response.data)
       })
   }, [])
-  //console.log('App: ', props.person.map(persons => persons));
-  //console.log('App: ', persons);
 
   const handleAddPhonebook = (event) => {
     event.preventDefault()
     const names = persons.map(person => person.name)
     const found = names.find(name => name === newName)
-    //console.log('Found: ', newNumber);
     if (found === undefined) {
       const personObject = {
         name: newName,
         number: newNumber,
       }
-      setPersons(persons.concat(personObject))
-      setNewSearch(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      personService
+        .create(personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewSearch(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+          }
+        )
+        .catch(e => console.log(e))
     } else {
       window.alert(`${newName} is already added to phonebook`)
     }
@@ -45,12 +47,10 @@ const App = () => {
   
   const handleNameChange = (event) => {
       setNewName(event.target.value)
-      //console.log(event.target.value);
   }
   
   const handleNumberChange = (event) => {
       setNewNumber(event.target.value)
-      //console.log(event.target.value);
   }
   
   const handleSearch = (event) => {
