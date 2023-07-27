@@ -62,6 +62,24 @@ const App = () => {
     setNewSearch(filtered);
   };
 
+  const handleDeletePerson = id => {
+    console.log(id);
+
+    if (window.confirm('Do you want to delete this person?')) {
+      personService
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+          setNewSearch(newSearch.filter(person => person.id !== id))
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    } else {
+      return null
+    }
+  }
+
 
   return (
     <div>
@@ -78,7 +96,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons newSearch={newSearch}/>
+      <Persons newSearch={newSearch} handleDeletePerson={handleDeletePerson}/>
     </div>
   )
 }
