@@ -41,7 +41,24 @@ const App = () => {
         )
         .catch(e => console.log(e))
     } else {
-      window.alert(`${newName} is already added to phonebook`)
+      const existingPerson = persons.find(person => person.name === found)
+      const personObject = {
+        name: found,
+        number: newNumber
+      }
+      if (window.confirm(`${found} is already added to phonebook, replace the old number with a new one?`)) {
+        personService
+          .update(existingPerson.id, personObject)
+          .then(response => {
+            setPersons(persons.map(person => person.id !== existingPerson.id ? person : response.data))
+            setNewSearch(persons.map(person => person.id !== existingPerson.id ? person : response.data))
+            setNewName('')
+            setNewNumber('')
+          })
+        //console.log(existingPerson.id);
+      } else {
+        return null
+      }
     }
   }
   
@@ -58,12 +75,12 @@ const App = () => {
     const filtered = persons.filter(person =>
       person.name.toLowerCase().includes(search)
     );
-    console.log("App:", filtered);
+    //console.log("App:", filtered);
     setNewSearch(filtered);
   };
 
   const handleDeletePerson = id => {
-    console.log(id);
+    //console.log(id);
 
     if (window.confirm('Do you want to delete this person?')) {
       personService
