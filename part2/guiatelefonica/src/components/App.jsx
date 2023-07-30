@@ -5,12 +5,14 @@ import Filter from './Filter'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
 import personService from '../services/persons'
+import Notification from './Notification'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState([])
+  const [ message, setMessage ] = useState(null)
 
   useEffect(() => {
     personService
@@ -37,6 +39,10 @@ const App = () => {
           setNewSearch(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
+          setMessage(`Added ${response.data.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 4000);
           }
         )
         .catch(e => console.log(e))
@@ -54,8 +60,11 @@ const App = () => {
             setNewSearch(persons.map(person => person.id !== existingPerson.id ? person : response.data))
             setNewName('')
             setNewNumber('')
+            setMessage(`Changed ${response.data.number}`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 4000);
           })
-        //console.log(existingPerson.id);
       } else {
         return null
       }
@@ -103,6 +112,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter text='Filter shown with:' persons={persons} handleSearch={handleSearch}/>
       
+      <Notification message={message}/>
       <h2>Add a new</h2>
       <PersonForm 
         newName={newName}
