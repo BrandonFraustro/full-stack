@@ -4,9 +4,24 @@
   padding: 2rem;
 }
 
+.principal {
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.list {
+  width: 100%;
+}
+
+ul {
+  list-style-type: none;
+}
+
 .form {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 input {

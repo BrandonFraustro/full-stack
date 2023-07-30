@@ -1,14 +1,15 @@
 import React from "react";
+import './Note.css'
 
 const Note = ({ note, toggleImportance }) => {
     //console.log('Note: ', note);
 
     const label = note.important 
-    ? 'make not important' : 'make important'
+    ? 'Make not important' : 'Make important'
 
     return (
         <div>
-            <li>
+            <li className="note">
                 {note.content}
                 <button onClick={toggleImportance}>{label}</button>
             </li>

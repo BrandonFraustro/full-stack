@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import Note from './Note'
-import axios from 'axios'
 import noteServices from '../services/notes'
+import Notification from './Notification'
+import Footer from './Footer'
 
 const App = () => {
-  //const data = props.note.map(note => note)
-  //console.log(data);
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    //console.log('Effect');
     noteServices
       .getAll()
       .then(response => {
@@ -48,16 +47,17 @@ const App = () => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
       .catch(error => {
-        alert (
+        setErrorMessage (
           `The note ${note.content} was already deleted form server`
         )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000);
         setNotes(notes.filter(n => n.id !== id))
       })
-    //console.log(`Importance of ${id} needs to be toggled`);
   }
 
   const handleNoteChange = (event) => {
-    /* console.log(event.target.value); */
     setNewNote(event.target.value)
   }
 
@@ -67,27 +67,31 @@ const App = () => {
 
   return (
     <div>
-      <h1>Notes</h1>
-      <div>
+      <div className='principal'>
+        <h1 className='title'>Notes</h1>
+        <Notification message={errorMessage} />
         <button onClick={() =>  setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all'}
+          Show {showAll ? 'important' : 'all'}
         </button>
       </div>
-      <ul>
-        {
-          notesToShow.map(note => 
-            <Note 
-              key={note.id} 
-              note={note}
-              toggleImportance={() => toggleImportanceOf(note.id)}
-            />  
-          )
-        }
-      </ul>
+      <div className="list">
+        <ul>
+          {
+            notesToShow.map(note => 
+              <Note 
+                key={note.id} 
+                note={note}
+                toggleImportance={() => toggleImportanceOf(note.id)}
+              />  
+            )
+          }
+        </ul>
+      </div>
       <form onSubmit={addNote} className="form">
         <input type="text" value={newNote} onChange={handleNoteChange}/>
         <button type='submit'>Save</button>
       </form>
+      <Footer />
     </div>
   )
 }
