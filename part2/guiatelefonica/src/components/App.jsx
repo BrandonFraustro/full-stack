@@ -12,7 +12,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState([])
-  const [ message, setMessage ] = useState(null)
+  const [ successfulMessage, setSuccessfulMessage ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
   useEffect(() => {
     personService
@@ -39,9 +40,9 @@ const App = () => {
           setNewSearch(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
-          setMessage(`Added ${response.data.name}`)
+          setSuccessfulMessage(`Added ${response.data.name}`)
           setTimeout(() => {
-            setMessage(null)
+            setSuccessfulMessage(null)
           }, 4000);
           }
         )
@@ -60,9 +61,15 @@ const App = () => {
             setNewSearch(persons.map(person => person.id !== existingPerson.id ? person : response.data))
             setNewName('')
             setNewNumber('')
-            setMessage(`Changed ${response.data.number}`)
+            setSuccessfulMessage(`Changed ${response.data.number}`)
             setTimeout(() => {
-              setMessage(null)
+              setSuccessfulMessage(null)
+            }, 4000);
+          })
+          .catch( error => {
+            setErrorMessage(`Information of ${found} has already been removed from server`)
+            setTimeout(() => {
+              setErrorMessage(null)
             }, 4000);
           })
       } else {
@@ -99,7 +106,12 @@ const App = () => {
           setNewSearch(newSearch.filter(person => person.id !== id))
         })
         .catch(error => {
-          console.log(error);
+          setErrorMessage('Information of this person has already been removed from server')
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 4000);
+          setPersons(persons.filter(person => person.id !== id))
+          setNewSearch(newSearch.filter(person => person.id !== id))
         })
     } else {
       return null
@@ -112,7 +124,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter text='Filter shown with:' persons={persons} handleSearch={handleSearch}/>
       
-      <Notification message={message}/>
+      <Notification message={[successfulMessage,errorMessage]}/>
       <h2>Add a new</h2>
       <PersonForm 
         newName={newName}

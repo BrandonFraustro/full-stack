@@ -11,6 +11,7 @@ const create = newObject => {
 
 const update = (id, newObject) => {
     return axios.put(`${baseUrl}/${id}`, newObject)
+    .catch(error => console.log(error))
 }
 
 const deletePerson = (id) => {
